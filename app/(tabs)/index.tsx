@@ -63,7 +63,7 @@ export default function HomeScreen() {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.welcome}>Welcome 👋</Text>
+        <Text style={styles.welcome}>Welcome Partha 👋</Text>
         <Text style={styles.subtext}>{new Date().toDateString()}</Text>
       </View>
 
