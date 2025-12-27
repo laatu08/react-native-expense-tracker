@@ -19,8 +19,8 @@ export default function TabLayout() {
 
         // 👇 IMPORTANT: remove extra bottom spacing
         tabBarStyle: {
-          paddingBottom: 0,
-          height: 46,
+          paddingBottom: 10,
+          height: 50,
         },
       }}
     >
