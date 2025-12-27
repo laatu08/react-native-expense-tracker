@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import { useCallback, useState } from "react";
-import { useFocusEffect } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { getTransactions } from "../storage/transactions";
 import { Transaction } from "../types/transaction";
 import { Alert, Pressable } from "react-native";
@@ -98,6 +98,12 @@ export default function HomeScreen() {
           <TransactionItem
             item={item}
             onLongPress={() => handleDelete(item.id)}
+            onPress={() =>
+              router.push({
+                pathname: "/add",
+                params: { editId: item.id },
+              })
+            }
           />
         )}
       />

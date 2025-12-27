@@ -7,16 +7,33 @@ import {
   Alert,
 } from "react-native";
 import { useEffect, useState } from "react";
-import { addTransaction } from "../storage/transactions";
+import { addTransaction, updateTransaction } from "../storage/transactions";
 import { TransactionType } from "../types/transaction";
 import { getCategories } from "../storage/categories";
 import { Category } from "../types/category";
+import { useLocalSearchParams } from "expo-router";
+import { getTransactions } from "../storage/transactions";
 
 export default function AddTransactionScreen() {
   const [amount, setAmount] = useState("");
   const [type, setType] = useState<TransactionType>("expense");
   const [category, setCategory] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
+
+  const { editId } = useLocalSearchParams();
+
+  useEffect(() => {
+    if (!editId) return;
+
+    getTransactions().then((data) => {
+      const tx = data.find((t: { id: string | string[] }) => t.id === editId);
+      if (!tx) return;
+
+      setAmount(tx.amount.toString());
+      setType(tx.type);
+      setCategory(tx.category);
+    });
+  }, [editId]);
 
   useEffect(() => {
     getCategories(type).then(setCategories);
@@ -28,19 +45,33 @@ export default function AddTransactionScreen() {
       return;
     }
 
-    await addTransaction({
-      id: Date.now().toString(),
-      amount: Number(amount),
-      type,
-      category,
-      date: new Date().toISOString(),
-    });
+    if (editId) {
+      await updateTransaction({
+        id: editId as string,
+        amount: Number(amount),
+        type,
+        category,
+        date: new Date().toISOString(),
+      });
+    } else {
+      await addTransaction({
+        id: Date.now().toString(),
+        amount: Number(amount),
+        type,
+        category,
+        date: new Date().toISOString(),
+      });
+    }
 
     setAmount("");
     setCategory("Food");
     setType("expense");
 
-    Alert.alert("Saved", "Transaction added successfully");
+    if (editId) {
+      Alert.alert("Saved", "Transaction updated successfully");
+    } else {
+      Alert.alert("Saved", "Transaction added successfully");
+    }
   };
 
   return (
@@ -95,7 +126,7 @@ export default function AddTransactionScreen() {
 
       {/* Save */}
       <Pressable style={styles.saveButton} onPress={handleSave}>
-        <Text style={styles.saveText}>Save</Text>
+        <Text style={styles.saveText}>{editId ? "Update" : "Save"}</Text>
       </Pressable>
     </View>
   );

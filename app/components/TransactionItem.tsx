@@ -4,11 +4,13 @@ import { Transaction } from "../types/transaction";
 type Props = {
   item: Transaction;
   onLongPress: () => void;
+  onPress: () => void;
 };
 
-export default function TransactionItem({ item, onLongPress }: Props) {
+
+export default function TransactionItem({ item, onLongPress, onPress }: Props) {
   return (
-    <Pressable onLongPress={onLongPress}>
+    <Pressable onPress={onPress} onLongPress={onLongPress}>
       <View style={styles.item}>
         <View>
           <Text style={styles.category}>{item.category}</Text>

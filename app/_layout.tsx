@@ -20,7 +20,7 @@ export default function RootLayout() {
 
     // ✅ Allow swipe from bottom to show it temporarily
     NavigationBar.setBehaviorAsync('overlay-swipe');
-  }, []);
+  },[]);
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>

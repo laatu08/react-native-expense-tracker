@@ -33,3 +33,11 @@ export const deleteTransaction = async (id: string) => {
   const updated = transactions.filter((tx: { id: string; }) => tx.id !== id);
   await saveTransactions(updated);
 };
+
+export const updateTransaction = async (updatedTx: Transaction) => {
+  const transactions = await getTransactions();
+  const updated = transactions.map((tx: { id: string; }) =>
+    tx.id === updatedTx.id ? updatedTx : tx
+  );
+  await AsyncStorage.setItem('transactions', JSON.stringify(updated));
+};
