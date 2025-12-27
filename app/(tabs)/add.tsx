@@ -6,16 +6,21 @@ import {
   Pressable,
   Alert,
 } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { addTransaction } from "../storage/transactions";
 import { TransactionType } from "../types/transaction";
-
-const CATEGORIES = ["Food", "Transport", "Shopping", "Bills", "Other"];
+import { getCategories } from "../storage/categories";
+import { Category } from "../types/category";
 
 export default function AddTransactionScreen() {
   const [amount, setAmount] = useState("");
   const [type, setType] = useState<TransactionType>("expense");
-  const [category, setCategory] = useState("Food");
+  const [category, setCategory] = useState("");
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    getCategories(type).then(setCategories);
+  }, [type]);
 
   const handleSave = async () => {
     if (!amount || isNaN(Number(amount))) {
@@ -74,16 +79,16 @@ export default function AddTransactionScreen() {
       {/* Category Picker */}
       <Text style={styles.label}>Category</Text>
       <View style={styles.row}>
-        {CATEGORIES.map((cat) => (
+        {categories.map((cat) => (
           <Pressable
-            key={cat}
+            key={cat.id}
             style={[
               styles.categoryButton,
-              category === cat && styles.activeCategory,
+              category === cat.name && styles.activeCategory,
             ]}
-            onPress={() => setCategory(cat)}
+            onPress={() => setCategory(cat.name)}
           >
-            <Text>{cat}</Text>
+            <Text>{cat.name}</Text>
           </Pressable>
         ))}
       </View>
