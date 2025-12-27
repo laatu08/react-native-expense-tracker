@@ -55,6 +55,16 @@ export default function TabLayout() {
           ),
         }}
       />
+
+      <Tabs.Screen
+        name="stats"
+        options={{
+          title: "Stats",
+          tabBarIcon: ({ color }) => (
+            <Ionicons size={24} name="stats-chart" color={color} />
+          ),
+        }}
+      />
     </Tabs>
   );
 }
